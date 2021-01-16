@@ -1,0 +1,11 @@
+@import './variables.scss';
+
+* {
+	margin: 0;
+	font-size: 10px;
+	box-sizing: border-box;
+};
+
+.app {
+	@include fill-screen-bottomless;
+}
