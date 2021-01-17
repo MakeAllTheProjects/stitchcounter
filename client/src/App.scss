@@ -29,3 +29,7 @@
 	overflow: auto;
 	@include thin-scroll-bar();
 }
+
+a, button {
+	outline: none;
+}

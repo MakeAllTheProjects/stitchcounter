@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react'
 import './App.scss'
 import Counter from './components/Counter'
+import MessageBanner from './components/MessageBanner'
 import PieceForm from './components/PieceForm'
 import PieceList from './components/PieceList'
 
@@ -27,7 +28,14 @@ export const CountReducer = (state, action) => {
   switch (action.type) {
     case 'SET_FROM_LOCAL':
       if (localState) {
-        newState.pieces = localState.pieces
+        newState.pieces = localState.pieces.map(piece => ({
+          currentCount: parseInt(piece.currentCount),
+          id: piece.id,
+          title: piece.title,
+          qtyMade: parseInt(piece.qtyMade),
+          qtyNeeded: parseInt(piece.qtyNeeded),
+          totalRowCount: parseInt(piece.totalRowCount)
+        }))
         newState.isPieceFormOpen = localState.isPieceFormOpen
         newState.currentPiece = localState.currentPiece
         newState.message = 'Saved project found'
@@ -53,13 +61,13 @@ export const CountReducer = (state, action) => {
       if (count + 1 === piece.totalRowCount) { 
         if (piece.qtyMade === piece.qtyNeeded) { 
           newPieces[current].currentCount = count + 1
-          newPieces[current].qtyMade = current.qtyMade + 1
+          newPieces[current].qtyMade = piece.qtyMade + 1
           newState.pieces =  newPieces
           newState.currentPiece = current + 1
           newState.message = `You have made all the needed ${piece.title} pieces! ${newState.currentPiece !== state.pieces.length - 1 ? 'On to the next...' : ''}`
         } else {
           newPieces[current].currentCount = 0
-          newPieces[current].qtyMade = current.qtyMade + 1
+          newPieces[current].qtyMade = piece.qtyMade + 1
           newState.pieces = newPieces
           newState.message = `You have finished a piece! New ${piece.title} ready to start.`
         }        
@@ -96,13 +104,13 @@ export const CountReducer = (state, action) => {
       }
 
     case 'CHECK_OFF_PIECE':
-      if ( current.qtyMade + 1 === current.qtyNeeded ) {
-        newPieces[current].qtyMade = current.qtyMade + 1
+      if ( piece.qtyMade + 1 === piece.qtyNeeded ) {
+        newPieces[current].qtyMade = piece.qtyMade + 1
         newState.pieces = newPieces
         newState.currentPiece = current > state.pieces.length ? current + 1 : current
         newState.message = `You have made all the needed ${piece.title} pieces.`
       } else {
-        newPieces[current].qtyMade = current.qtyMade + 1
+        newPieces[current].qtyMade = piece.qtyMade + 1
         newState.pieces = newPieces
         newState.message = `You have finished a piece. New ${piece.title} ready to start.`
       }
@@ -111,10 +119,10 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'UNCHECK_OFF_PIECE':
-      if ( current.qtyMade === 0 ) {
+      if ( piece.qtyMade === 0 ) {
         return state
       } else {
-        newPieces[current].qtyMade = current.qtyMade - 1
+        newPieces[current].qtyMade = piece.qtyMade - 1
         newState.pieces = newPieces
         newState.message = `${piece.title} has been frogged 🐸!`
         localStorage.setItem('stitchcount', JSON.stringify(newState))
@@ -132,7 +140,8 @@ export const CountReducer = (state, action) => {
       })
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
-      newState.message = `${piece.title} has been added to the list.`
+      newState.isEdit = false
+      newState.message = `${action.payload.title} has been added to the list.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
@@ -189,11 +198,16 @@ function App () {
     console.log(state.message)
   }, [state.message])
 
+  useEffect(() => {
+    console.log(state)
+  }, [state])
+
   return (
     <>
       <div className="app-background"/>
       <GlobalContext.Provider value={{state: state, dispatch: dispatch}}>
         <div className="app">
+          <MessageBanner/>
           {state.isPieceFormOpen && <PieceForm />}
           {state.pieces.length > 0 && !state.isPieceFormOpen && <Counter />}
           {state.pieces.length > 0 && <PieceList />}

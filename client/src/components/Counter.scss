@@ -1,5 +1,27 @@
 @import '../variables.scss';
 
 .counter {
+	@include center-v;
+	margin: 8rem 0 0 0;
 	font-size: 2rem;
+
+	h1 {
+		font-size: 3rem;
+		text-transform: uppercase;
+	}
+
+	.made-checklist {
+		@include center-h;
+		padding: 1rem;
+		.checked-item {
+			height: 2rem;
+			filter: invert(100%);
+			margin: 0 0.5rem;
+			cursor: pointer;
+
+			&:hover {
+				filter: invert(90%), drop-shadow($light-text 0 0 3px);
+			}
+		}
+	}
 }
