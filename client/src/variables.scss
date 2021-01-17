@@ -50,21 +50,6 @@ $light-text: rgba(255, 255, 255, 0.9);
 	bottom: 0;
 }
 
-$phone: 500px;
-$tablet: 775px;
-
 @mixin small-media {
-	@media screen and (max-width: $phone) { @content };
-}
-
-@mixin large-media {
-	@media screen and (min-width: $phone) { @content };
-}
-
-@mixin tablet-only {
-	@media screen and (min-width: $phone) and (max-width: $tablet) { @content };
-}
-
-@mixin tablet-and-smaller {
-	@media screen and (max-width: $tablet) { @content };
+	@media screen and (max-width: 800px) { @content };
 }

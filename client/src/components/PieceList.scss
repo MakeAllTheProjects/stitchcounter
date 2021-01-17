@@ -1,5 +1,18 @@
 @import '../variables.scss';
 
 .piece-list {
+	margin: 1rem;
+	@include center-v;
 	font-size: 2rem;
+
+	.add-piece, .piece-card {
+		margin: 1rem 0;
+		padding: 1rem 2rem 1rem 2rem;
+		background-color: rgba(255, 255, 255, 0.3);
+		border: none;
+		box-shadow: $light-text 0 0 5px, black 0 0 10px;
+		font-size: 2rem;
+		font-weight: 900;
+		text-shadow: black 0 0 1px;
+	}
 }

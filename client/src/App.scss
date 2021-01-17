@@ -22,6 +22,7 @@
 .app {
 	@include fill-screen;
 	@include center-h;
+	justify-content: space-evenly;
 	@include small-media {
 		@include center-v;
 	}

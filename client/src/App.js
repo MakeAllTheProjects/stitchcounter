@@ -30,21 +30,22 @@ export const CountReducer = (state, action) => {
         newState.pieces = localState.pieces
         newState.isPieceFormOpen = localState.isPieceFormOpen
         newState.currentPiece = localState.currentPiece
-        newState.message = 'Saved state found'
+        newState.message = 'Saved project found'
         return newState
       } else {
         newState.isPieceFormOpen = true
-        newState.message = 'No saved state found'
         return newState
       }
 
     case 'TOGGLE_FORM':
       newState.isPieceFormOpen = state.pieces.length === 0 ? true : !state.isPieceFormOpen
       newState.isEdit = action.payload.isEdit || false
+      newState.message = newState.isEdit ? "Form open" : "Form closed"
       return newState
 
     case 'SELECT_PIECE':
       newState.currentPiece = action.payload.selectedPiece
+      newState.message = `${newState.pieces[newState.currentPiece].title} has been selected`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
@@ -55,10 +56,12 @@ export const CountReducer = (state, action) => {
           newPieces[current].qtyMade = current.qtyMade + 1
           newState.pieces =  newPieces
           newState.currentPiece = current + 1
+          newState.message = `You have made all the needed ${piece.title} pieces! ${newState.currentPiece !== state.pieces.length - 1 ? 'On to the next...' : ''}`
         } else {
           newPieces[current].currentCount = 0
           newPieces[current].qtyMade = current.qtyMade + 1
           newState.pieces = newPieces
+          newState.message = `You have finished a piece! New ${piece.title} ready to start.`
         }        
       } else { 
         newPieces[current].currentCount = 0
@@ -81,10 +84,12 @@ export const CountReducer = (state, action) => {
 
     case 'RESET_COUNT':
       if (count === 0) {
-        return state
+        newState.message = "Count is already set to zero!"
+        return newState
       } else {
         newPieces[current].currentCount = 0
         newState.pieces = newPieces
+        newState.message = `${piece.title}'s current count has been reset.`
 
         localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
@@ -95,9 +100,11 @@ export const CountReducer = (state, action) => {
         newPieces[current].qtyMade = current.qtyMade + 1
         newState.pieces = newPieces
         newState.currentPiece = current > state.pieces.length ? current + 1 : current
+        newState.message = `You have made all the needed ${piece.title} pieces.`
       } else {
         newPieces[current].qtyMade = current.qtyMade + 1
         newState.pieces = newPieces
+        newState.message = `You have finished a piece. New ${piece.title} ready to start.`
       }
 
       localStorage.setItem('stitchcount', JSON.stringify(newState))
@@ -109,6 +116,7 @@ export const CountReducer = (state, action) => {
       } else {
         newPieces[current].qtyMade = current.qtyMade - 1
         newState.pieces = newPieces
+        newState.message = `${piece.title} has been frogged 🐸!`
         localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
       }
@@ -124,6 +132,7 @@ export const CountReducer = (state, action) => {
       })
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
+      newState.message = `${piece.title} has been added to the list.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
@@ -131,6 +140,7 @@ export const CountReducer = (state, action) => {
       newPieces = newPieces.filter(obj => obj.id !== current)
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
+      newState.message = `${piece.title} has been removed from the list.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
@@ -145,18 +155,21 @@ export const CountReducer = (state, action) => {
       }
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
+      newState.message = `${piece.title} has been updated.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'RESET_ALL_PIECES':
       newPieces = newPieces.map(obj => { return {...obj, currentCount: 0, qtyMade: 0} })
       newState.pieces = newPieces
+      newState.message = `Project has been reset.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'DELETE_ALL_PIECES':
       newState = initialState
       newState.isPieceFormOpen = true
+      newState.message = `Project has been deleted. You may now start a new project.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
