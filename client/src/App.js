@@ -12,11 +12,10 @@ const initialState = {
 }
 
 export const CountReducer = (state, action) => {
-  const piece = state.pieces[state.currentPiece]
-  const count = piece.currentCount
   const localState = JSON.parse(localStorage.getItem('stitchcount'))
   const current = state.currentPiece
-
+  const piece = state.pieces[current]
+  const count = piece.currentCount
   let newPieces = [...state.pieces]
   let newState = { ...state }
 
@@ -154,7 +153,10 @@ function App () {
     <>
       <div className="app-background"/>
       <div className="app">
-        
+        {/* <Counter/> */}
+        {/* <PieceForm/> */}
+        {/* <PiecesList/> */}
+        {/* <Footer/> */}
       </div>
     </>
   )

@@ -47,3 +47,22 @@
 	right: 0;
 	min-height: 100vh;
 }
+
+$phone: 500px;
+$tablet: 775px;
+
+@mixin small-media {
+	@media screen and (max-width: $phone) { @content };
+}
+
+@mixin large-media {
+	@media screen and (min-width: $phone) { @content };
+}
+
+@mixin tablet-only {
+	@media screen and (min-width: $phone) and (max-width: $tablet) { @content };
+}
+
+@mixin tablet-and-smaller {
+	@media screen and (max-width: $tablet) { @content };
+}

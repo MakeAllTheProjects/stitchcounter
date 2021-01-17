@@ -17,9 +17,14 @@
 	background-position: center, center;
 	background-repeat: no-repeat, no-repeat;
 	background-size: cover, cover;
+	box-shadow: inset black 0 1rem 12rem;
 }
 
 .app {
 	@include fill-screen-bottomless;
 	z-index: 2;
+	@include center-h;
+	@include small-media {
+		@include center-v;
+	}
 }
