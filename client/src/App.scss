@@ -6,6 +6,20 @@
 	box-sizing: border-box;
 };
 
+.app-background {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index:0;
+	background: linear-gradient(rgba(76, 4, 117, 0.87), rgba(1, 17, 14, 0.938)), url('./assets/background-1.jpg');
+	background-position: center, center;
+	background-repeat: no-repeat, no-repeat;
+	background-size: cover, cover;
+}
+
 .app {
 	@include fill-screen-bottomless;
+	z-index: 2;
 }

@@ -1,64 +1,162 @@
-import axios from 'axios'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import './App.scss'
-import MessageBanner from './components/MessageBanner'
 
 export const baseURL = process.env.REACT_APP_IS_PRODUCTION ? 'https://myherokuapp.herokuapp.com/api' : 'http://localhost:8080/api'
 
 export const GlobalContext = React.createContext()
 
-const initialWelcomeState = {
-  loading: true,
-  message: ""
+const initialState = {
+  pieces: [],
+  currentPiece: 0,
+  isPieceFormOpen: false
 }
-const welcomeReducer = (state, action) => {
+
+export const CountReducer = (state, action) => {
+  const piece = state.pieces[state.currentPiece]
+  const count = piece.currentCount
+  const localState = JSON.parse(localStorage.getItem('stitchcount'))
+  const current = state.currentPiece
+
+  let newPieces = [...state.pieces]
+  let newState = { ...state }
+
   switch (action.type) {
-    case 'FETCH_SUCCESS':
+    case 'TOGGLE_FORM':
       return {
-        loading: false,
-        message: action.message
+        ...state,
+        isPieceFormOpen: !state.isPieceFormOpen
       }
-    case 'FETCH_ERROR':
+
+    case 'SELECT_PIECE':
+      newState.currentPiece = action.payload.selectedPiece
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'SET_FROM_LOCAL':
       return {
-        loading: false,
-        message: 'Something went wrong!'
+        ...state,
+        pieces: localState.pieces,
+        currentPiece: localState.currentPiece
       }
-    default: 
+
+    case 'INCREASE_COUNT': 
+      if (count + 1 === piece.totalRowCount) { 
+        if (piece.qtyMade === piece.qtyNeeded) { 
+          newPieces[current].currentCount = count + 1
+          newPieces[current].qtyMade = current.qtyMade + 1
+          newState.pieces =  newPieces
+          newState.currentPiece = current + 1
+        } else {
+          newPieces[current].currentCount = 0
+          newPieces[current].qtyMade = current.qtyMade + 1
+          newState.pieces = newPieces
+        }        
+      } else { 
+        newPieces[current].currentCount = 0
+        newState.pieces = newPieces
+      }
+
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'DECREASE_COUNT':
+      if ( count === 0 ) {
+        return state
+      } else {
+        newPieces[current].currentCount = count - 1
+        newState.pieces = newPieces
+
+        localStorage.setItem('stitchcount', newState)
+        return newState
+      }
+
+    case 'RESET_COUNT':
+      if (count === 0) {
+        return state
+      } else {
+        newPieces[current].currentCount = 0
+        newState.pieces = newPieces
+
+        localStorage.setItem('stitchcount', newState)
+        return newState
+      }
+
+    case 'CHECK_OFF_PIECE':
+      if ( current.qtyMade + 1 === current.qtyNeeded ) {
+        newPieces[current].qtyMade = current.qtyMade + 1
+        newState.pieces = newPieces
+        newState.currentPiece = current > state.pieces.length ? current + 1 : current
+      } else {
+        newPieces[current].qtyMade = current.qtyMade + 1
+        newState.pieces = newPieces
+      }
+
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'UNCHECK_OFF_PIECE':
+      if ( current.qtyMade === 0 ) {
+        return state
+      } else {
+        newPieces[current].qtyMade = current.qtyMade - 1
+        newState.pieces = newPieces
+        localStorage.setItem('stitchcount', newState)
+        return newState
+      }
+
+    case 'ADD_PIECE':
+      newPieces.push({
+        id: current,
+        tite: action.payload.title,
+        qtyNeeded: action.payload.qtyNeeded,
+        qtyMade: action.payload.qtyMade,
+        totalRowCount: action.payload.totalRowCount,
+        currentCount: action.payload.currentCount
+      })
+      newState.pieces = newPieces
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'REMOVE_PIECE':
+      newState = newState.filter(obj => obj.id !== current)
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'EDIT_PIECE':
+      newPieces[current] = {
+        id: current,
+        tite: action.payload.title,
+        qtyNeeded: action.payload.qtyNeeded,
+        qtyMade: action.payload.qtyMade,
+        totalRowCount: action.payload.totalRowCount,
+        currentCount: action.payload.currentCount
+      }
+      newState.pieces = newPieces
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'RESET_ALL_PIECES':
+      newPieces = newPieces.map(obj => { return {...obj, currentCount: 0, qtyMade: 0} })
+      newState.pieces = newPieces
+      localStorage.setItem('stitchcount', newState)
+      return newState
+
+    case 'DELETE_ALL_PIECES':
+      return initialState
+
+    default:
       return state
   }
 }
 
 function App () {
-  const [welcomeState, welcomeDispatch] = useReducer(welcomeReducer, initialWelcomeState)
-
-  useEffect(() => {
-    axios.get(baseURL)
-      .then(res => {
-        welcomeDispatch({
-          type: 'FETCH_SUCCESS',
-          message: res.data.message
-        })
-      })
-      .catch(err => {
-        console.error(err)
-        welcomeDispatch({
-          type: 'FETCH_ERROR'
-        })
-      })
-  }, [])
-
   return (
-    <div className="App">
-      App
-      <GlobalContext.Provider
-        value={{
-          welcomeState: welcomeState,
-          welcomeDispatch: welcomeDispatch
-        }}
-      >
-        <MessageBanner />
-      </GlobalContext.Provider>      
-    </div>
+    <>
+      <div className="app-background"/>
+      <div className="app">
+        
+      </div>
+    </>
   )
 }
 
