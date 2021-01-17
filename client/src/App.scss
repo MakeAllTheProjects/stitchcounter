@@ -4,15 +4,14 @@
 	margin: 0;
 	font-size: 10px;
 	box-sizing: border-box;
+	color: $light-text;
+	z-index: 3;
+	@include font-five;
 };
 
 .app-background {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index:0;
+	@include fill-screen;
+	z-index: 1;
 	background: linear-gradient(rgba(76, 4, 117, 0.87), rgba(1, 17, 14, 0.938)), url('./assets/background-1.jpg');
 	background-position: center, center;
 	background-repeat: no-repeat, no-repeat;
@@ -21,8 +20,7 @@
 }
 
 .app {
-	@include fill-screen-bottomless;
-	z-index: 2;
+	@include fill-screen;
 	@include center-h;
 	@include small-media {
 		@include center-v;

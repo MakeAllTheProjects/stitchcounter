@@ -29,6 +29,8 @@
 	font-family: 'Oleo Script', cursive;
 }
 
+$light-text: rgba(255, 255, 255, 0.9);
+
 @mixin center-h {
 	display: flex;
 	align-items: center;
@@ -40,12 +42,12 @@
 	flex-direction: column;
 }
 
-@mixin fill-screen-bottomless {
-	display: absolute;
+@mixin fill-screen {
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
-	min-height: 100vh;
+	bottom: 0;
 }
 
 $phone: 500px;

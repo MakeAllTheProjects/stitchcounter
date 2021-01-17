@@ -1,5 +1,8 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import './App.scss'
+import Counter from './components/Counter'
+import PieceForm from './components/PieceForm'
+import PieceList from './components/PieceList'
 
 export const baseURL = process.env.REACT_APP_IS_PRODUCTION ? 'https://myherokuapp.herokuapp.com/api' : 'http://localhost:8080/api'
 
@@ -8,35 +11,42 @@ export const GlobalContext = React.createContext()
 const initialState = {
   pieces: [],
   currentPiece: 0,
-  isPieceFormOpen: false
+  isPieceFormOpen: false,
+  isEdit: false,
+  message: ''
 }
 
 export const CountReducer = (state, action) => {
   const localState = JSON.parse(localStorage.getItem('stitchcount'))
-  const current = state.currentPiece
-  const piece = state.pieces[current]
-  const count = piece.currentCount
-  let newPieces = [...state.pieces]
-  let newState = { ...state }
+  const current = state.currentPiece || 0
+  const piece = state.pieces[current] || {}
+  const count = piece.currentCount || 0
+  let newPieces = [...state.pieces] || []
+  let newState = { ...state } || initialState
 
   switch (action.type) {
-    case 'TOGGLE_FORM':
-      return {
-        ...state,
-        isPieceFormOpen: !state.isPieceFormOpen
+    case 'SET_FROM_LOCAL':
+      if (localState) {
+        newState.pieces = localState.pieces
+        newState.isPieceFormOpen = localState.isPieceFormOpen
+        newState.currentPiece = localState.currentPiece
+        newState.message = 'Saved state found'
+        return newState
+      } else {
+        newState.isPieceFormOpen = true
+        newState.message = 'No saved state found'
+        return newState
       }
+
+    case 'TOGGLE_FORM':
+      newState.isPieceFormOpen = state.pieces.length === 0 ? true : !state.isPieceFormOpen
+      newState.isEdit = action.payload.isEdit || false
+      return newState
 
     case 'SELECT_PIECE':
       newState.currentPiece = action.payload.selectedPiece
-      localStorage.setItem('stitchcount', newState)
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
-
-    case 'SET_FROM_LOCAL':
-      return {
-        ...state,
-        pieces: localState.pieces,
-        currentPiece: localState.currentPiece
-      }
 
     case 'INCREASE_COUNT': 
       if (count + 1 === piece.totalRowCount) { 
@@ -55,7 +65,7 @@ export const CountReducer = (state, action) => {
         newState.pieces = newPieces
       }
 
-      localStorage.setItem('stitchcount', newState)
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'DECREASE_COUNT':
@@ -65,7 +75,7 @@ export const CountReducer = (state, action) => {
         newPieces[current].currentCount = count - 1
         newState.pieces = newPieces
 
-        localStorage.setItem('stitchcount', newState)
+        localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
       }
 
@@ -76,7 +86,7 @@ export const CountReducer = (state, action) => {
         newPieces[current].currentCount = 0
         newState.pieces = newPieces
 
-        localStorage.setItem('stitchcount', newState)
+        localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
       }
 
@@ -90,7 +100,7 @@ export const CountReducer = (state, action) => {
         newState.pieces = newPieces
       }
 
-      localStorage.setItem('stitchcount', newState)
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'UNCHECK_OFF_PIECE':
@@ -99,7 +109,7 @@ export const CountReducer = (state, action) => {
       } else {
         newPieces[current].qtyMade = current.qtyMade - 1
         newState.pieces = newPieces
-        localStorage.setItem('stitchcount', newState)
+        localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
       }
 
@@ -113,12 +123,15 @@ export const CountReducer = (state, action) => {
         currentCount: action.payload.currentCount
       })
       newState.pieces = newPieces
-      localStorage.setItem('stitchcount', newState)
+      newState.isPieceFormOpen = false
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'REMOVE_PIECE':
-      newState = newState.filter(obj => obj.id !== current)
-      localStorage.setItem('stitchcount', newState)
+      newPieces = newPieces.filter(obj => obj.id !== current)
+      newState.pieces = newPieces
+      newState.isPieceFormOpen = false
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'EDIT_PIECE':
@@ -131,17 +144,21 @@ export const CountReducer = (state, action) => {
         currentCount: action.payload.currentCount
       }
       newState.pieces = newPieces
-      localStorage.setItem('stitchcount', newState)
+      newState.isPieceFormOpen = false
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'RESET_ALL_PIECES':
       newPieces = newPieces.map(obj => { return {...obj, currentCount: 0, qtyMade: 0} })
       newState.pieces = newPieces
-      localStorage.setItem('stitchcount', newState)
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'DELETE_ALL_PIECES':
-      return initialState
+      newState = initialState
+      newState.isPieceFormOpen = true
+      localStorage.setItem('stitchcount', JSON.stringify(newState))
+      return newState
 
     default:
       return state
@@ -149,15 +166,26 @@ export const CountReducer = (state, action) => {
 }
 
 function App () {
+  const [state, dispatch] = useReducer(CountReducer, initialState)
+
+  useEffect(() => {
+    dispatch({type: 'SET_FROM_LOCAL'})
+  }, [])
+  
+  useEffect(() => {
+    console.log(state.message)
+  }, [state.message])
+
   return (
     <>
       <div className="app-background"/>
-      <div className="app">
-        {/* <Counter/> */}
-        {/* <PieceForm/> */}
-        {/* <PiecesList/> */}
-        {/* <Footer/> */}
-      </div>
+      <GlobalContext.Provider value={{state: state, dispatch: dispatch}}>
+        <div className="app">
+          {state.isPieceFormOpen && <PieceForm />}
+          {state.pieces.length > 0 && <Counter />}
+          {state.pieces.length > 0 && <PieceList />}
+        </div>
+      </GlobalContext.Provider>
     </>
   )
 }
