@@ -2,6 +2,13 @@
 
 .piece-form {
 	@include center-v;
+	margin-top: 10rem;
+	padding: 0;
+
+	@include small-media {
+		padding: 0 0 5rem 0;
+		border-bottom: rgba(255, 255, 255, 0.3) 2px solid;
+	}
 
 	h3 {
 		margin-bottom: 0.5rem;

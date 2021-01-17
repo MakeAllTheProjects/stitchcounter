@@ -123,12 +123,12 @@ export const CountReducer = (state, action) => {
 
     case 'ADD_PIECE':
       newPieces.push({
-        id: current,
-        tite: action.payload.title,
+        id: state.pieces.length === 0 ? 0 : state.pieces[state.pieces.length - 1].id + 1,
+        title: action.payload.title,
         qtyNeeded: action.payload.qtyNeeded,
-        qtyMade: action.payload.qtyMade,
+        qtyMade: 0,
         totalRowCount: action.payload.totalRowCount,
-        currentCount: action.payload.currentCount
+        currentCount: 0
       })
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
@@ -147,7 +147,7 @@ export const CountReducer = (state, action) => {
     case 'EDIT_PIECE':
       newPieces[current] = {
         id: current,
-        tite: action.payload.title,
+        title: action.payload.title,
         qtyNeeded: action.payload.qtyNeeded,
         qtyMade: action.payload.qtyMade,
         totalRowCount: action.payload.totalRowCount,
@@ -195,7 +195,7 @@ function App () {
       <GlobalContext.Provider value={{state: state, dispatch: dispatch}}>
         <div className="app">
           {state.isPieceFormOpen && <PieceForm />}
-          {state.pieces.length > 0 && <Counter />}
+          {state.pieces.length > 0 && !state.isPieceFormOpen && <Counter />}
           {state.pieces.length > 0 && <PieceList />}
         </div>
       </GlobalContext.Provider>

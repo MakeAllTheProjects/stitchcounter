@@ -50,6 +50,35 @@ $light-text: rgba(255, 255, 255, 0.9);
 	bottom: 0;
 }
 
+@mixin fill-screen-bottomless {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	min-height: 100vh;
+}
+
 @mixin small-media {
 	@media screen and (max-width: 800px) { @content };
+}
+
+@mixin thin-scroll-bar() {
+  &::-webkit-scrollbar {
+		height: 10%;
+		width: 1.25rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 0.25rem;
+    width: 0.25rem;
+		background-color: rgba(50, 100, 155, 0.75);
+		box-shadow: inset rgba(255, 255, 255, 0.3) 0 0 0.75rem;
+    border-radius: 5rem;
+  }
+
+  &::-webkit-scrollbar-track {
+		height: 50%;
+    background-color: black;
+		box-shadow: inset rgba(255, 255, 255, 0.35) 0 0 1rem, rgba(255, 255, 255, 0.35) 0 0 0.2rem;
+  }
 }

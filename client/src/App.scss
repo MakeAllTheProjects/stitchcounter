@@ -20,10 +20,12 @@
 }
 
 .app {
-	@include fill-screen;
+	@include fill-screen-bottomless;
 	@include center-h;
 	justify-content: space-evenly;
 	@include small-media {
 		@include center-v;
 	}
+	overflow: auto;
+	@include thin-scroll-bar();
 }

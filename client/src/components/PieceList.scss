@@ -5,14 +5,68 @@
 	@include center-v;
 	font-size: 2rem;
 
+	@include small-media {
+		position: sticky;
+		top: 40vh;
+		margin: 5rem 1rem 1rem 1rem;
+	}
+
 	.add-piece, .piece-card {
 		margin: 1rem 0;
-		padding: 1rem 2rem 1rem 2rem;
-		background-color: rgba(255, 255, 255, 0.3);
+		padding: 0.5rem 2rem 0.5rem 2rem;
+		width: 25rem;
 		border: none;
 		box-shadow: $light-text 0 0 5px, black 0 0 10px;
 		font-size: 2rem;
 		font-weight: 900;
 		text-shadow: black 0 0 1px;
+		cursor: pointer;
+	}
+
+	.add-piece {
+		margin-bottom: 3rem;
+		background-color: rgba(100, 255, 150, 0.3);
+		box-shadow: rgba(100, 255, 150, 0.9) 0 0 5px, $light-text 0 0 6px, black 0 0 10px;
+		border-radius: 3rem;
+	}
+
+	.piece-card {
+		background-color: rgba(255, 255, 255, 0.15);
+		border-radius: 0.5rem;
+
+		&:hover {
+			box-shadow: inset rgba(255, 255, 255, 0.25) 0 0 3rem;
+		}
+
+		p, h3 {
+			@include font-five;
+			text-align: center;
+			text-shadow: black 0 0 1px;
+		}
+
+		h3 {
+			margin-top: 0.3rem;
+			font-size: 1.5rem;
+			font-weight: 600;
+			text-transform: uppercase;
+		}
+
+		p {
+			margin: 0.75rem 0 0.5rem 0;
+			padding-top: 1rem;
+			font-size: 1rem;
+			font-weight: 500;
+			border-top: rgba(255, 255, 255, 0.25) 1px solid;
+		}
+
+		transition: all ease 1s;
+	}
+
+	.piece-card.selected {
+		background-color: rgba(25, 255, 255, 0.3);
+		border: rgba(25, 225, 255, 0.15) 2px solid;
+		box-shadow: rgba(25, 225, 255, 0.9) 0 0 5px, black 0 0 5px;
+		cursor: default;
+		transition: all ease 1s;
 	}
 }

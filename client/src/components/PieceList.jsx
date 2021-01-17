@@ -9,12 +9,30 @@ export default function PieceList() {
 
 	return (
 		<section className="piece-list">
-			<button className="add-piece">+ Add a Piece</button>
-			{state.pieces.map(piece => (
-				<article key={piece.id} className="piece-card">
-					<p>{piece.title}</p>
-				</article>
-			))}
+			<button
+				className="add-piece"
+				onClick={() => dispatch({
+					type: 'TOGGLE_FORM',
+					payload: { isEdit: false }
+				})}
+			>
+				+ Add a Piece
+			</button>
+			{state.pieces.map(piece => {
+				return (
+					<article
+						key={piece.id}
+						className={ state.currentPiece === piece.id ? "piece-card selected" : "piece-card" }
+						onClick={() => dispatch({ 
+							type: 'SELECT_PIECE',
+							payload: { selectedPiece: piece.id }
+						})}
+					>
+						<h3>{piece.title}</h3> 
+						<p>{piece.qtyMade}/{piece.qtyNeeded} ( {(piece.currentCount / piece.totalRowCount) * 100}% COMPLETE )</p>
+					</article>
+				)
+			})}
 		</section>
 	)
 }
