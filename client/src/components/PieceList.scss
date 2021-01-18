@@ -11,7 +11,7 @@
 		margin: 5rem 1rem 1rem 1rem;
 	}
 
-	.add-piece, .piece-card {
+	.add-piece, .piece-card, .reset-pieces, .delete-all {
 		margin: 1rem 0;
 		padding: 0.5rem 2rem 0.5rem 2rem;
 		width: 25rem;
@@ -23,12 +23,26 @@
 		cursor: pointer;
 	}
 
+	.add-piece, .reset-pieces, .delete-all {
+		border-radius: 3rem;
+			outline: none;
+	}
+
 	.add-piece {
 		margin-bottom: 3rem;
 		background-color: rgba(100, 255, 150, 0.3);
 		box-shadow: rgba(100, 255, 150, 0.9) 0 0 5px, $light-text 0 0 6px, black 0 0 10px;
-		border-radius: 3rem;
-			outline: none;
+	}
+
+	.reset-pieces {
+		margin-top: 3rem;
+		background-color: rgba(248, 0, 236, 0.3);
+		box-shadow: rgba(255, 100, 221, 0.9) 0 0 5px, $light-text 0 0 6px, black 0 0 10px;
+	}
+
+	.delete-all {
+		background-color: rgba(248, 70, 0, 0.3);
+		box-shadow: rgba(255, 100, 100, 0.9) 0 0 5px, $light-text 0 0 6px, black 0 0 10px;
 	}
 
 	.piece-card {

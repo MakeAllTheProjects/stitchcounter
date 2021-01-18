@@ -33,6 +33,22 @@ export default function PieceList() {
 					</article>
 				)
 			})}
+			<button
+				className="reset-pieces"
+				onClick={() => dispatch({
+					type: 'RESET_ALL_PIECES'
+				})}
+			>
+				Reset All Piece
+			</button>
+			<button
+				className="delete-all"
+				onClick={() => dispatch({
+					type: 'DELETE_ALL_PIECES'
+				})}
+			>
+				Delete All Piece
+			</button>
 		</section>
 	)
 }
