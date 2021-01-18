@@ -6,7 +6,7 @@ import PieceForm from './components/PieceForm'
 import PieceList from './components/PieceList'
 import githubIcon from './assets/github-big-logo.svg'
 
-export const baseURL = process.env.REACT_APP_IS_PRODUCTION ? 'https://myherokuapp.herokuapp.com/api' : 'http://localhost:8080/api'
+export const baseURL = process.env.REACT_APP_IS_PRODUCTION ? 'https://stitchcount.herokuapp.com/api' : 'http://localhost:8080/api'
 
 export const GlobalContext = React.createContext()
 
