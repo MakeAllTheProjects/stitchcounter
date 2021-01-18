@@ -4,6 +4,7 @@ import Counter from './components/Counter'
 import MessageBanner from './components/MessageBanner'
 import PieceForm from './components/PieceForm'
 import PieceList from './components/PieceList'
+import githubIcon from './assets/github-big-logo.svg'
 
 export const baseURL = process.env.REACT_APP_IS_PRODUCTION ? 'https://myherokuapp.herokuapp.com/api' : 'http://localhost:8080/api'
 
@@ -215,6 +216,13 @@ function App () {
           {state.pieces.length > 0 && <PieceList />}
         </div>
       </GlobalContext.Provider>
+      <a className="github-link" href="https://github.com/MeghanBomberger/stitchcounter" target="_blank">
+        <img
+          alt="github"
+          title="github"
+          src={githubIcon}
+        />
+      </a>
     </>
   )
 }

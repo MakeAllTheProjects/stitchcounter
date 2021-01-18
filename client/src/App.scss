@@ -33,3 +33,21 @@
 a, button {
 	outline: none;
 }
+
+.github-link {
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	z-index: 4;
+	filter: invert(100%) opacity(30%);
+	cursor: pointer;
+	transition: all ease 0.5s;
+
+	&:hover {
+		filter: invert(100%) opacity(90%);
+	}
+
+	img {
+		height: 3rem;		
+	}
+}
