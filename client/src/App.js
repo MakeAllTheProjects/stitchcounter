@@ -20,9 +20,9 @@ const initialState = {
 export const CountReducer = (state, action) => {
   const localState = JSON.parse(localStorage.getItem('stitchcount'))
   const current = state.currentPiece || 0
-  const piece = state.pieces[current] || {}
-  const count = piece.currentCount || 0
-  let newPieces = [...state.pieces] || []
+  const piece = { ...state.pieces[state.currentPiece] } || {}
+  const count = state.pieces[state.currentPiece] ? state.pieces[state.currentPiece].currentCount : 0
+  let newPieces = [ ...state.pieces ] || []
   let newState = { ...state } || initialState
 
   switch (action.type) {
@@ -58,34 +58,33 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'INCREASE_COUNT': 
-      if (count + 1 === piece.totalRowCount) { 
-        if (piece.qtyMade === piece.qtyNeeded) { 
-          newPieces[current].currentCount = count + 1
-          newPieces[current].qtyMade = piece.qtyMade + 1
-          newState.pieces =  newPieces
-          newState.currentPiece = current + 1
-          newState.message = `You have made all the needed ${piece.title} pieces! ${newState.currentPiece !== state.pieces.length - 1 ? 'On to the next...' : ''}`
-        } else {
-          newPieces[current].currentCount = 0
-          newPieces[current].qtyMade = piece.qtyMade + 1
-          newState.pieces = newPieces
-          newState.message = `You have finished a piece! New ${piece.title} ready to start.`
-        }        
-      } else { 
-        newPieces[current].currentCount = 0
-        newState.pieces = newPieces
+      if (count < piece.totalRowCount) {
+        piece.currentCount = count + 1
+        if (count + 1 === piece.totalRowCount) {
+          if (piece.qtyMade + 1 === piece.qtyNeeded && state.currentPiece < state.pieces.length - 1) {
+            piece.qtyMade = piece.qtyMade + 1
+            newState.currentPiece = newState.currentPiece + 1
+          } else {
+            piece.qtyMade = piece.qtyMade + 1
+            piece.currentCount = 0
+          }
+        }
       }
-
+      newPieces[current] = piece
+      newState.pieces = newPieces
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
     case 'DECREASE_COUNT':
-      if ( count === 0 ) {
+      if (count === 0 ) {
         return state
       } else {
-        newPieces[current].currentCount = count - 1
+        piece.currentCount = piece.currentCount - 1
+        if (piece.qtyMade === piece.qtyNeeded) {
+          newPieces[current].qtyMade = newPieces[current].qtyMade - 1
+        }
+        newPieces[current] = piece
         newState.pieces = newPieces
-
         localStorage.setItem('stitchcount', JSON.stringify(newState))
         return newState
       }
@@ -95,7 +94,12 @@ export const CountReducer = (state, action) => {
         newState.message = "Count is already set to zero!"
         return newState
       } else {
+        if (piece.qtyMade === piece.qtyNeeded) {
+          newPieces[current].qtyMade = newPieces[current].qtyMade - 1
+        }
+
         newPieces[current].currentCount = 0
+        
         newState.pieces = newPieces
         newState.message = `${piece.title}'s current count has been reset.`
 
@@ -193,13 +197,13 @@ function App () {
   useEffect(() => {
     dispatch({type: 'SET_FROM_LOCAL'})
   }, [])
-  
-  useEffect(() => {
-    console.log(state.message)
-  }, [state.message])
 
   useEffect(() => {
-    console.log(state)
+    console.log("state changed")
+    // console.log(state)
+    if (state.pieces.length > 0) {
+      console.log(state.pieces[state.currentPiece].currentCount)
+    }
   }, [state])
 
   return (
