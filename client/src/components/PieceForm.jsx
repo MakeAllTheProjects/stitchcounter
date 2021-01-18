@@ -10,10 +10,12 @@ export default function PieceForm () {
 	const [totalRowCount, setTotalRowCount] = useState(1)
 
 	useEffect(() => {
-		const current = state.pieces[state.currentPiece]
-		setTitle(current.title)
-		setQtyNeeded(current.qtyNeeded)
-		setTotalRowCount(current.totalRowCount)
+		if (state.isEdit) {
+			const current = state.pieces[state.currentPiece]
+			setTitle(current.title)
+			setQtyNeeded(current.qtyNeeded)
+			setTotalRowCount(current.totalRowCount)
+		}
 	}, [state.isEdit])
 
 	const handleSubmit = e => {

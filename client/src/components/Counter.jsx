@@ -46,6 +46,15 @@ export default function Counter () {
 						}
 					})}
 				/>
+				<img
+					className="control-button delete"
+					alt="delete piece"
+					title="delete piece"
+					src={deleteIcon}
+					onClick={() => dispatch({
+						type: 'REMOVE_PIECE'
+					})}
+				/>
 			</div>
 			<h1>{state.pieces[state.currentPiece].title ? state.pieces[state.currentPiece].title : "Select a piece"}</h1>
 			<div className="made-checklist">

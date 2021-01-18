@@ -48,7 +48,6 @@ export const CountReducer = (state, action) => {
     case 'TOGGLE_FORM':
       newState.isPieceFormOpen = state.pieces.length === 0 ? true : !state.isPieceFormOpen
       newState.isEdit = action.payload.isEdit || false
-      newState.message = newState.isEdit ? "Form open" : "Form closed"
       return newState
 
     case 'SELECT_PIECE':
@@ -150,9 +149,10 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'REMOVE_PIECE':
-      newPieces = newPieces.filter(obj => obj.id !== current)
+      newPieces = newPieces.filter((obj, i) => i !== current)
       newState.pieces = newPieces
-      newState.isPieceFormOpen = false
+      newState.currentPiece = current === 0 ? 0 : current - 1
+      newState.isPieceFormOpen = current === 0 && newPieces.length === 0 ? true : false
       newState.message = `${piece.title} has been removed from the list.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
@@ -162,13 +162,13 @@ export const CountReducer = (state, action) => {
         id: current,
         title: action.payload.title,
         qtyNeeded: action.payload.qtyNeeded,
-        qtyMade: action.payload.qtyMade,
+        qtyMade: piece.qtyMade,
         totalRowCount: action.payload.totalRowCount,
-        currentCount: action.payload.currentCount
+        currentCount: piece.currentCount
       }
       newState.pieces = newPieces
       newState.isPieceFormOpen = false
-      newState.message = `${piece.title} has been updated.`
+      newState.message = `${piece.title} has been updated.${piece.currentCount > action.payload.totalRowCount ? ` You will need to frog 🐸 ${piece.currentCount - action.payload.totalRowCount} row${piece.currentCount - action.payload.totalRowCount === 1 ? '' : 's'}.` : ''}`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
@@ -199,12 +199,10 @@ function App () {
   }, [])
 
   useEffect(() => {
-    console.log("state changed")
-    // console.log(state)
-    if (state.pieces.length > 0) {
-      console.log(state.pieces[state.currentPiece].currentCount)
+    if (state.pieces.length === 0) {
+      dispatch({type: 'TOGGLE_FORM', payload: { isEdit: false }})
     }
-  }, [state])
+  }, [])
 
   return (
     <>

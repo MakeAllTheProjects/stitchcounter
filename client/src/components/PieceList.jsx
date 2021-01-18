@@ -18,14 +18,14 @@ export default function PieceList() {
 			>
 				+ Add a Piece
 			</button>
-			{state.pieces.map(piece => {
+			{state.pieces.map((piece, i) => {
 				return (
 					<article
 						key={piece.id}
-						className={ state.currentPiece === piece.id ? "piece-card selected" : "piece-card" }
+						className={ state.currentPiece === i ? "piece-card selected" : "piece-card" }
 						onClick={() => dispatch({ 
 							type: 'SELECT_PIECE',
-							payload: { selectedPiece: piece.id }
+							payload: { selectedPiece: i }
 						})}
 					>
 						<h3>{piece.title}</h3> 
