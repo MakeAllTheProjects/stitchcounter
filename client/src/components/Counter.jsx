@@ -31,8 +31,19 @@ export default function Counter () {
 		setFinishedPieces(newFinishedPieces)
 	}
 
+	const handleKeyDown = (e) => {
+		console.log(e)
+		if (e.keyCode === 40) {
+			dispatch({type: 'DECREASE_COUNT'})
+		}
+
+		if (e.keyCode === 38) {
+			dispatch({ type: 'INCREASE_COUNT' })
+		}
+	}
+
 	return (
-		<section className="counter">
+		<section className="counter" onKeyDown={e => handleKeyDown(e)}>
 			<div className="piece-control-panel">
 				<img
 					className="control-button edit"
