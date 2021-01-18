@@ -70,6 +70,10 @@
 			background-color: rgba(13, 180, 60, 0.3);
 		}
 
+		.disabled {
+			filter: opacity(20%);
+		}
+
 		.count {
 			@include font-three;
 			font-size: 10rem;

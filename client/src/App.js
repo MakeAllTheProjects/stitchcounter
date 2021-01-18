@@ -69,7 +69,9 @@ export const CountReducer = (state, action) => {
             piece.currentCount = 0
           }
         }
-      } else if (count === piece.totalRowCount && state)
+      } else if (count === piece.totalRowCount && state.pieces[state.pieces.length - 1].qtyMade === state.pieces[state.pieces.length - 1].qtyNeeded) {
+        newState.message("You have already finished this project.")
+      }
       newPieces[current] = piece
       newState.pieces = newPieces
       localStorage.setItem('stitchcount', JSON.stringify(newState))
