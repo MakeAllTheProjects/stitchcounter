@@ -28,6 +28,7 @@ body {
 	@include fill-screen-bottomless;
 	@include center-h;
 	justify-content: space-evenly;
+	padding: 10rem 0 8rem 0;
 	@include small-media {
 		@include center-v;
 	}
