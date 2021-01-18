@@ -200,10 +200,10 @@ function App () {
   }, [])
 
   useEffect(() => {
-    if (state.pieces.length === 0) {
+    if (state.pieces.length === 0 && !localStorage.getItem('stitchcount')) {
       dispatch({type: 'TOGGLE_FORM', payload: { isEdit: false }})
     }
-  }, [])
+  }, [state])
 
   return (
     <>
