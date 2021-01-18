@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { GlobalContext } from '../App'
 import './PieceForm.scss'
 
@@ -8,6 +8,13 @@ export default function PieceForm () {
 	const [title, setTitle] = useState('')
 	const [qtyNeeded, setQtyNeeded] = useState(1)
 	const [totalRowCount, setTotalRowCount] = useState(1)
+
+	useEffect(() => {
+		const current = state.pieces[state.currentPiece]
+		setTitle(current.title)
+		setQtyNeeded(current.qtyNeeded)
+		setTotalRowCount(current.totalRowCount)
+	}, [state.isEdit])
 
 	const handleSubmit = e => {
 		e.preventDefault()
