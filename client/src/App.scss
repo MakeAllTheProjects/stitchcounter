@@ -9,6 +9,11 @@
 	@include font-five;
 };
 
+body {
+	// overflow: scroll;
+	@include thin-scroll-bar();
+}
+
 .app-background {
 	@include fill-screen;
 	z-index: 1;
@@ -26,8 +31,6 @@
 	@include small-media {
 		@include center-v;
 	}
-	overflow: auto;
-	@include thin-scroll-bar();
 }
 
 a, button {

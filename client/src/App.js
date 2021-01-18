@@ -69,7 +69,7 @@ export const CountReducer = (state, action) => {
             piece.currentCount = 0
           }
         }
-      }
+      } else if (count === piece.totalRowCount && state)
       newPieces[current] = piece
       newState.pieces = newPieces
       localStorage.setItem('stitchcount', JSON.stringify(newState))

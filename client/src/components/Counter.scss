@@ -2,8 +2,12 @@
 
 .counter {
 	@include center-v;
-	margin: 8rem 0 0 0;
+	margin: 0 0 0 0;
 	font-size: 2rem;
+
+	@include small-media {
+		margin: 8rem 0 4rem 0;
+	}
 
 	.piece-control-panel {
 		@include center-h;

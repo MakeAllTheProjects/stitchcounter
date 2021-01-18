@@ -51,11 +51,10 @@ $light-text: rgba(255, 255, 255, 0.9);
 }
 
 @mixin fill-screen-bottomless {
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
-	min-height: 100vh;
 }
 
 @mixin small-media {
