@@ -12,6 +12,14 @@
 body {
 	// overflow: scroll;
 	@include thin-scroll-bar();
+	@include center-h;
+	min-height: 100vh;
+}
+
+.app {
+	@include center-v;
+	min-height: 100vh;
+	background-color: red;
 }
 
 .app-background {
@@ -24,9 +32,10 @@ body {
 	box-shadow: inset black 0 1rem 12rem;
 }
 
-.app {
-	@include fill-screen-bottomless;
+.app-container {
+	width: 100vw;
 	@include center-h;
+	align-items: flex-start;
 	justify-content: space-evenly;
 	padding: 10rem 0 8rem 0;
 	@include small-media {

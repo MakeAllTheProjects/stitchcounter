@@ -208,10 +208,10 @@ function App () {
   }, [state])
 
   return (
-    <>
+    <div className="app">
       <div className="app-background"/>
       <GlobalContext.Provider value={{state: state, dispatch: dispatch}}>
-        <div className="app">
+        <div className="app-container">
           <MessageBanner/>
           {state.isPieceFormOpen && <PieceForm />}
           {state.pieces.length > 0 && !state.isPieceFormOpen && <Counter />}
@@ -225,7 +225,7 @@ function App () {
           src={githubIcon}
         />
       </a>
-    </>
+    </div>
   )
 }
 
