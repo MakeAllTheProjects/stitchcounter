@@ -30,7 +30,8 @@ server.use(express.json())
 server.use(cors(corsOptions.origin))
 server.use(serveStatic(__dirname + '/client/build'))
 
-server.get("/api", (req, res) => {
+// Throw away route to use for keeping Heroku app from sleeping on free tier. Remove if upgraded.
+server.get("/hello", (req, res) => {
 	res.send({ message: "Hello World!" })
 })
 
