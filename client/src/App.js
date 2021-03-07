@@ -23,7 +23,7 @@ export const CountReducer = (state, action) => {
   const current = state.currentPiece || 0
   const piece = { ...state.pieces[state.currentPiece] } || {}
   const count = state.pieces[state.currentPiece] ? state.pieces[state.currentPiece].currentCount : 0
-  let newPieces = [ ...state.pieces ] || []
+  let newPieces = [...state.pieces] || []
   let newState = { ...state } || initialState
 
   switch (action.type) {
@@ -57,7 +57,7 @@ export const CountReducer = (state, action) => {
       localStorage.setItem('stitchcount', JSON.stringify(newState))
       return newState
 
-    case 'INCREASE_COUNT': 
+    case 'INCREASE_COUNT':
       if (count < piece.totalRowCount) {
         piece.currentCount = count + 1
         if (count + 1 === piece.totalRowCount) {
@@ -78,7 +78,7 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'DECREASE_COUNT':
-      if (count === 0 ) {
+      if (count === 0) {
         return state
       } else {
         piece.currentCount = piece.currentCount - 1
@@ -101,7 +101,7 @@ export const CountReducer = (state, action) => {
         }
 
         newPieces[current].currentCount = 0
-        
+
         newState.pieces = newPieces
         newState.message = `${piece.title}'s current count has been reset.`
 
@@ -110,7 +110,7 @@ export const CountReducer = (state, action) => {
       }
 
     case 'CHECK_OFF_PIECE':
-      if ( piece.qtyMade + 1 === piece.qtyNeeded ) {
+      if (piece.qtyMade + 1 === piece.qtyNeeded) {
         newPieces[current].qtyMade = piece.qtyMade + 1
         newState.pieces = newPieces
         newState.currentPiece = current > state.pieces.length ? current + 1 : current
@@ -125,7 +125,7 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'UNCHECK_OFF_PIECE':
-      if ( piece.qtyMade === 0 ) {
+      if (piece.qtyMade === 0) {
         return state
       } else {
         newPieces[current].qtyMade = piece.qtyMade - 1
@@ -176,7 +176,7 @@ export const CountReducer = (state, action) => {
       return newState
 
     case 'RESET_ALL_PIECES':
-      newPieces = newPieces.map(obj => { return {...obj, currentCount: 0, qtyMade: 0} })
+      newPieces = newPieces.map(obj => { return { ...obj, currentCount: 0, qtyMade: 0 } })
       newState.pieces = newPieces
       newState.message = `Project has been reset.`
       localStorage.setItem('stitchcount', JSON.stringify(newState))
@@ -194,25 +194,25 @@ export const CountReducer = (state, action) => {
   }
 }
 
-function App () {
+function App() {
   const [state, dispatch] = useReducer(CountReducer, initialState)
 
   useEffect(() => {
-    dispatch({type: 'SET_FROM_LOCAL'})
+    dispatch({ type: 'SET_FROM_LOCAL' })
   }, [])
 
   useEffect(() => {
-    if (state.pieces.length === 0 && !localStorage.getItem('stitchcount')) {
-      dispatch({type: 'TOGGLE_FORM', payload: { isEdit: false }})
+    if (state.pieces.length === 0 && !localStorage.getItem('stitchcount') && state.isEdit !== false) {
+      dispatch({ type: 'TOGGLE_FORM', payload: { isEdit: false } })
     }
   }, [state])
 
   return (
     <div className="app">
-      <div className="app-background"/>
-      <GlobalContext.Provider value={{state: state, dispatch: dispatch}}>
+      <div className="app-background" />
+      <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
         <div className="app-container">
-          <MessageBanner/>
+          <MessageBanner />
           {state.isPieceFormOpen && <PieceForm />}
           {state.pieces.length > 0 && !state.isPieceFormOpen && <Counter />}
           {state.pieces.length > 0 && <PieceList />}

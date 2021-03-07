@@ -32,7 +32,6 @@ export default function Counter () {
 	}
 
 	const handleKeyDown = (e) => {
-		console.log(e)
 		if (e.keyCode === 40) {
 			dispatch({type: 'DECREASE_COUNT'})
 		}
